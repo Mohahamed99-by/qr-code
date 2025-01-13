@@ -247,16 +247,17 @@ app.delete('/qr-codes/:id', authenticateToken, async (req, res) => {
 
 // Protected Route Example
 app.get('/protected', async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
+  const client = await pool.connect();
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    res.json({ message: 'Access granted', user: decoded });
+    const result = await client.query(
+      'SELECT first_name, last_name FROM users WHERE id = $1',
+      [req.user.id]
+    );
+    res.json(result.rows[0]);
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
 
