@@ -168,6 +168,98 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.put('/user/profile', authenticateToken, async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const { first_name, last_name, email } = req.body;
+
+    // Check if new email already exists (if email is being updated)
+    if (email) {
+      const existingUser = await client.query(
+        'SELECT * FROM users WHERE email = $1 AND id != $2',
+        [email, req.user.id]
+      );
+      if (existingUser.rows.length > 0) {
+        return res.status(400).json({ error: 'Email already exists' });
+      }
+    }
+
+    // Update user information
+    const result = await client.query(
+      `UPDATE users 
+       SET first_name = COALESCE($1, first_name),
+           last_name = COALESCE($2, last_name),
+           email = COALESCE($3, email)
+       WHERE id = $4
+       RETURNING id, first_name, last_name, email, created_at`,
+      [first_name, last_name, email, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const updatedUser = result.rows[0];
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser.id,
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
+        email: updatedUser.email,
+        created_at: updatedUser.created_at
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
+  }
+});
+
+app.put('/user/change-password', authenticateToken, async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const { current_password, new_password } = req.body;
+
+    // Get user's current password
+    const result = await client.query(
+      'SELECT password FROM users WHERE id = $1',
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(
+      current_password,
+      result.rows[0].password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+
+    // Update password
+    await client.query(
+      'UPDATE users SET password = $1 WHERE id = $2',
+      [hashedPassword, req.user.id]
+    );
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
+  }
+});
+
 // Generate QR Code Endpoint (Protected)
 app.post('/generate-qr', authenticateToken, async (req, res) => {
   const client = await pool.connect();
@@ -247,17 +339,16 @@ app.delete('/qr-codes/:id', authenticateToken, async (req, res) => {
 
 // Protected Route Example
 app.get('/protected', async (req, res) => {
-  const client = await pool.connect();
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   try {
-    const result = await client.query(
-      'SELECT first_name, last_name FROM users WHERE id = $1',
-      [req.user.id]
-    );
-    res.json(result.rows[0]);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    res.json({ message: 'Access granted', user: decoded });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  } finally {
-    client.release();
+    res.status(401).json({ error: 'Invalid token' });
   }
 });
 
