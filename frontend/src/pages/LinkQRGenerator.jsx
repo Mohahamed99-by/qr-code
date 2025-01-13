@@ -43,7 +43,7 @@ const LinkQRGenerator = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+   
 
       setQrCodes(data);
     } catch (error) {

@@ -61,7 +61,11 @@ const Login = () => {
       setSuccessMessage("Login successful!");
       setError("");
       setPassword('');
-      navigate("/qr-code-generate", { replace: true });
+      
+      // Reload the page and then navigate
+      window.location.reload();
+      // The navigation will happen after the page reload
+      window.location.href = "/qr-code-generate";
     } catch (err) {
       if (err.response) {
         switch (err.response.status) {
@@ -86,7 +90,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-cyan-500 px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">

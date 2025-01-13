@@ -1,6 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { QrCode, LogOut, User, Menu } from 'lucide-react';
+import { 
+  QrCode, 
+  LogOut, 
+  Menu, 
+  ScanLine, 
+  PlusCircle, 
+  UserPlus, 
+  ArrowRight, 
+  Power
+} from 'lucide-react';
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -8,8 +17,6 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-  console.log(user);
-  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -76,39 +83,65 @@ const Navbar = () => {
                     to="/qr-code-scanner"
                     className="text-cyan-100 hover:text-white font-medium transition-colors duration-300 flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-blue-800/40"
                   >
+                    <ScanLine size={18} />
                     <span>Scanner</span>
                   </Link>
                   <Link
                     to="/qr-code-generate"
                     className="text-cyan-100 hover:text-white font-medium transition-colors duration-300 flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-blue-800/40"
                   >
+                    <PlusCircle size={18} />
                     <span>Generator</span>
                   </Link>
                 </div>
-                <div className="relative">
+                <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center space-x-2 bg-blue-800/40 backdrop-blur-sm px-4 py-2 rounded-lg hover:bg-blue-700/50 transition-all duration-300"
+                    aria-expanded={dropdownOpen}
+                    className="flex items-center space-x-2 bg-blue-800/40 backdrop-blur-sm px-4 py-2 rounded-full hover:bg-blue-700/50 transition-all duration-300"
                   >
-                    <User size={20} className="text-cyan-100" />
-                    <span className="text-cyan-100 font-medium">Account</span>
+                    {user.profile_image ? (
+                      <img
+                        src={user.profile_image}
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center">
+                        <span className="text-lg font-bold text-white">
+                          {user.first_name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                   </button>
 
                   {dropdownOpen && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-blue-100 overflow-hidden"
-                    >
+                    <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-blue-100 overflow-hidden">
                       <div className="p-4 bg-blue-50">
-                        <p className="text-sm text-blue-900 font-medium truncate">
-                          {user.email}
+                        {user.profile_image ? (
+                          <img
+                            src={user.profile_image}
+                            alt="Profile"
+                            className="w-16 h-16 rounded-full object-cover mx-auto"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 rounded-full bg-blue-700 flex items-center justify-center mx-auto">
+                            <span className="text-3xl font-bold text-white">
+                              {user.first_name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                        <p className="text-sm text-blue-900 font-medium text-center mt-2 truncate">
+                          {user.first_name} {user.last_name}
                         </p>
+                        <p className="text-xs text-blue-600 text-center">{user.email}</p>
                       </div>
+
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-3 text-red-600 hover:bg-red-50 transition-colors duration-300 flex items-center"
                       >
-                        <LogOut size={16} className="mr-2" />
+                        <Power size={16} className="mr-2" />
                         Sign Out
                       </button>
                     </div>
@@ -119,21 +152,24 @@ const Navbar = () => {
               <div className="flex items-center space-x-6">
                 <Link
                   to="/qr-code-scanner"
-                  className="text-cyan-100 hover:text-white font-medium transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-blue-800/40"
+                  className="text-cyan-100 hover:text-white font-medium transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-blue-800/40 flex items-center space-x-2"
                 >
-                  Scanner
+                  <ScanLine size={18} />
+                  <span>Scanner</span>
                 </Link>
                 <Link
                   to="/get-started"
-                  className="text-cyan-100 hover:text-white font-medium transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-blue-800/40"
+                  className="text-cyan-100 hover:text-white font-medium transition-colors duration-300 px-4 py-2 rounded-lg hover:bg-blue-800/40 flex items-center space-x-2"
                 >
-                  Get Started
+                  <ArrowRight size={18} />
+                  <span>Get Started</span>
                 </Link>
                 <Link
                   to="/sign-up"
-                  className="bg-cyan-500 text-white px-5 py-2 rounded-lg hover:bg-cyan-400 transition-all duration-300 font-medium shadow-md"
+                  className="bg-cyan-500 text-white px-5 py-2 rounded-lg hover:bg-cyan-400 transition-all duration-300 font-medium shadow-md flex items-center space-x-2"
                 >
-                  Sign Up
+                  <UserPlus size={18} />
+                  <span>Sign Up</span>
                 </Link>
               </div>
             )}
@@ -155,48 +191,73 @@ const Navbar = () => {
           <div className="px-4 pt-2 pb-3 space-y-1">
             {user ? (
               <>
-                <div className="px-3 py-2 text-sm text-blue-900 font-medium">
-                  {user.email}
+                <div className="flex space-y-1">
+                  {user.profile_image ? (
+                    <img
+                      src={user.profile_image}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center text-center">
+                      <span className="text-lg font-bold text-white">
+                        {user.first_name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col mx-2 my-1">
+                    <p className="text-sm text-blue-900 font-medium truncate">
+                      {user.first_name} {user.last_name}
+                    </p>
+                    <p className="text-xs text-blue-600">{user.email}</p>
+                  </div>
                 </div>
+
                 <Link
                   to="/qr-code-scanner"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300"
+                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
-                  Scanner
+                  <ScanLine size={18} />
+                  <span>Scanner</span>
                 </Link>
                 <Link
                   to="/qr-code-generate"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300"
+                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
-                  Generator
+                  <PlusCircle size={18} />
+                  <span>Generator</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300 flex items-center"
+                  className="w-full text-left px-3 py-2 text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
-                  <LogOut size={16} className="mr-2" />
-                  Sign Out
+                  <Power size={18} />
+                  <span>Sign Out</span>
                 </button>
               </>
             ) : (
               <>
                 <Link
                   to="/qr-code-scanner"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300"
+                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
-                  Scanner
+                  <Scanner size={18} />
+                  <span>Scanner</span>
                 </Link>
                 <Link
                   to="/get-started"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300"
+                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
-                  Get Started
+                  <ArrowRight size={18} />
+                  <span>Get Started</span>
                 </Link>
                 <Link
                   to="/sign-up"
-                  className="block px-3 py-2 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg text-center mt-2 transition-all duration-300"
+                  className="block px-3 py-2 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg text-center mt-2 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
-                  Sign Up
+                  <UserPlus size={18} />
+                  <span>Sign Up</span>
                 </Link>
               </>
             )}

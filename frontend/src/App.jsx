@@ -8,7 +8,7 @@ import LinkQRGenerator from './pages/LinkQRGenerator';
 import QRCodeScanner from './pages/QRCodeScanner'
 import Navbar from './components/NavBar';
 import Examples from './components/Examples';
-
+import Profile from './pages/profile';
 const App = () => {
   return (
     <div>
@@ -21,6 +21,7 @@ const App = () => {
           <Route path="/examples" element={<Examples />} />
           <Route path="/get-started" element={<Login />} />
           <Route path="/sign-up" element={<Register />} />
+          <Route path="/Profile/:id" element={<Profile />} />
           <Route path="/qr-code-generate" element={<LinkQRGenerator />} />
           <Route path="/qr-code-scanner" element={<QRCodeScanner />} />
         </Routes>
