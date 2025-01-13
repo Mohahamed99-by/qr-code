@@ -13,9 +13,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const apiBaseUrl = window.location.hostname === 'localhost' 
-    ? "http://localhost:5000" 
-    : "https://qr-code-backend-mv59.onrender.com";
+  const apiBaseUrl = "https://qr-code-simo.onrender.com";
 
   const handleSubmit = async (e) => {
     e.preventDefault();

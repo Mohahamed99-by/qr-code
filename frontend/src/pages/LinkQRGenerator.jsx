@@ -12,7 +12,7 @@ import {
   Phone,
   Sparkles,
   MessageCircle,
-  MapPin, // Add this import
+  MapPin,
 } from 'lucide-react';
 
 const LinkQRGenerator = () => {
@@ -22,10 +22,7 @@ const LinkQRGenerator = () => {
   const [loading, setLoading] = useState(false);
   
 
-  const apiBaseUrl = window.location.hostname === 'localhost' 
-    ? "http://localhost:5000" 
-    : "https://qr-code-backend-mv59.onrender.com";
-
+  const apiBaseUrl = "https://qr-code-simo.onrender.com";
   useEffect(() => {
     fetchQRCodes();
   }, []);
