@@ -1,35 +1,32 @@
 const express = require('express');
-const mysql = require('mysql2/promise');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const QRCode = require('qrcode');
 const shortid = require('shortid');
 const cors = require('cors');
 require('dotenv').config();
-
+const { Pool } = require('pg');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const pool = mysql.createPool({
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+const port = process.env.PORT || 5000;
 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 // JWT Secret Key
 const JWT_SECRET = 'your_jwt_secret_key';
 
-
 // Create Tables Queries
 const createUsersTableQuery = `
   CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -40,12 +37,12 @@ const createUsersTableQuery = `
 
 const createQRCodesTableQuery = `
   CREATE TABLE IF NOT EXISTS qr_codes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    type ENUM('url', 'email', 'wifi', 'phone', 'whatsapp', 'location') NOT NULL,
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    type VARCHAR(20) NOT NULL CHECK (type IN ('url', 'email', 'wifi', 'phone', 'whatsapp', 'location')),
     content TEXT NOT NULL,
     short_code VARCHAR(10) UNIQUE NOT NULL,
-    qr_code LONGTEXT NOT NULL,
+    qr_code TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   )
@@ -72,10 +69,10 @@ const authenticateToken = (req, res, next) => {
 // Initialize Database
 async function initializeDatabase() {
   try {
-    const connection = await pool.getConnection();
-    await connection.query(createUsersTableQuery);
-    await connection.query(createQRCodesTableQuery);
-    connection.release();
+    const client = await pool.connect();
+    await client.query(createUsersTableQuery);
+    await client.query(createQRCodesTableQuery);
+    client.release();
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Database initialization error:', error);
@@ -103,17 +100,15 @@ function generateQRCodeContent(type, data) {
   }
 }
 
-
-
-
 // Registration Endpoint
 app.post('/register', async (req, res) => {
+  const client = await pool.connect();
   try {
     const { first_name, last_name, email, password } = req.body;
 
     // Check if email already exists
-    const [existingUser] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-    if (existingUser.length > 0) {
+    const existingUser = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (existingUser.rows.length > 0) {
       return res.status(400).json({ error: 'Email already exists' });
     }
 
@@ -121,25 +116,28 @@ app.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert user into the database
-    const [result] = await pool.query(
-      'INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)',
+    const result = await client.query(
+      'INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id',
       [first_name, last_name, email, hashedPassword]
     );
 
-    res.json({ message: 'User registered successfully', userId: result.insertId });
+    res.json({ message: 'User registered successfully', userId: result.rows[0].id });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
 
 // Login Endpoint
 app.post('/login', async (req, res) => {
+  const client = await pool.connect();
   try {
     const { email, password } = req.body;
 
     // Find user by email
-    const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-    const user = users[0];
+    const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = result.rows[0];
     if (!user) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
@@ -165,11 +163,14 @@ app.post('/login', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
 
 // Generate QR Code Endpoint (Protected)
 app.post('/generate-qr', authenticateToken, async (req, res) => {
+  const client = await pool.connect();
   try {
     const { type, data } = req.body;
     const short_code = shortid.generate();
@@ -184,13 +185,13 @@ app.post('/generate-qr', authenticateToken, async (req, res) => {
     });
 
     // Save to Database with user_id
-    const [result] = await pool.query(
-      'INSERT INTO qr_codes (user_id, type, content, short_code, qr_code) VALUES (?, ?, ?, ?, ?)',
+    const result = await client.query(
+      'INSERT INTO qr_codes (user_id, type, content, short_code, qr_code) VALUES ($1, $2, $3, $4, $5) RETURNING id',
       [req.user.id, type, content, short_code, qr_code]
     );
 
     res.json({
-      id: result.insertId,
+      id: result.rows[0].id,
       type,
       content,
       short_code,
@@ -198,40 +199,51 @@ app.post('/generate-qr', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
 
 // Retrieve User's Saved QR Codes Endpoint (Protected)
 app.get('/qr-codes', authenticateToken, async (req, res) => {
+  const client = await pool.connect();
   try {
-    const [rows] = await pool.query('SELECT * FROM qr_codes WHERE user_id = ? ORDER BY created_at DESC', [req.user.id]);
-    res.json(rows);
+    const result = await client.query(
+      'SELECT * FROM qr_codes WHERE user_id = $1 ORDER BY created_at DESC',
+      [req.user.id]
+    );
+    res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
 
 // Delete QR Code Endpoint (Protected)
 app.delete('/qr-codes/:id', authenticateToken, async (req, res) => {
+  const client = await pool.connect();
   try {
     const { id } = req.params;
     
     // First, verify the QR code belongs to the user
-    const [qrCodes] = await pool.query('SELECT * FROM qr_codes WHERE id = ? AND user_id = ?', [id, req.user.id]);
+    const qrCode = await client.query(
+      'SELECT * FROM qr_codes WHERE id = $1 AND user_id = $2',
+      [id, req.user.id]
+    );
     
-    if (qrCodes.length === 0) {
+    if (qrCode.rows.length === 0) {
       return res.status(404).json({ error: 'QR code not found or unauthorized' });
     }
 
-    await pool.query('DELETE FROM qr_codes WHERE id = ?', [id]);
+    await client.query('DELETE FROM qr_codes WHERE id = $1', [id]);
     res.json({ message: 'QR code deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
   }
 });
-
-
-
 
 // Protected Route Example
 app.get('/protected', async (req, res) => {
@@ -247,12 +259,6 @@ app.get('/protected', async (req, res) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 });
-
-
-
-
-
-
 
 // Initialize Server
 const PORT = process.env.PORT || 5000;
