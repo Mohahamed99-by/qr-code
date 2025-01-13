@@ -13,7 +13,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const apiBaseUrl = "https://qr-code-ma.onrender.com";
+  const apiBaseUrl = "https://qr-code-db.onrender.com";
 
   const handleSubmit = async (e) => {
     e.preventDefault();

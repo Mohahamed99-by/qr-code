@@ -29,7 +29,7 @@ const Navbar = () => {
 
   const fetchUserData = async (token) => {
     try {
-      const response = await fetch('https://qr-code-ma.onrender.com/protected', {
+      const response = await fetch('https://qr-code-db.onrender.com/user/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -22,7 +22,7 @@ const LinkQRGenerator = () => {
   const [loading, setLoading] = useState(false);
   
 
-  const apiBaseUrl = "https://qr-code-ma.onrender.com";
+  const apiBaseUrl = "https://qr-code-db.onrender.com";
   useEffect(() => {
     fetchQRCodes();
   }, []);

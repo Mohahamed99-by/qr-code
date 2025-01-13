@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const apiBaseUrl = "https://qr-code-ma.onrender.com";
+  const apiBaseUrl = "https://qr-code-db.onrender.com";
 
   useEffect(() => {
     const state = location.state;

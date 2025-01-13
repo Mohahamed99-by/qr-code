@@ -168,6 +168,44 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.get('/user/profile', authenticateToken, async (req, res) => {
+  const client = await pool.connect();
+  try {
+    // Fetch user details from database using the id from the JWT token
+    const result = await client.query(
+      'SELECT id, first_name, last_name, email, created_at FROM users WHERE id = $1',
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.rows[0];
+
+    // Get user's QR codes count
+    const qrCodesCount = await client.query(
+      'SELECT COUNT(*) as total FROM qr_codes WHERE user_id = $1',
+      [req.user.id]
+    );
+
+    res.json({
+      user: {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        created_at: user.created_at,
+        qr_codes_count: parseInt(qrCodesCount.rows[0].total)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  } finally {
+    client.release();
+  }
+});
+
 app.put('/user/profile', authenticateToken, async (req, res) => {
   const client = await pool.connect();
   try {
