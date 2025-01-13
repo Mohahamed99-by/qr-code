@@ -216,14 +216,14 @@ const Navbar = () => {
 
                 <Link
                   to="/qr-code-scanner"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
+                  className="px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
                   <ScanLine size={18} />
                   <span>Scanner</span>
                 </Link>
                 <Link
                   to="/qr-code-generate"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
+                  className="px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
                   <PlusCircle size={18} />
                   <span>Generator</span>
@@ -240,21 +240,21 @@ const Navbar = () => {
               <>
                 <Link
                   to="/qr-code-scanner"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
+                  className="px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
-                  <Scanner size={18} />
+                  <ScanLine size={18} />
                   <span>Scanner</span>
                 </Link>
                 <Link
                   to="/get-started"
-                  className="block px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
+                  className="px-3 py-2 text-base font-medium text-slate-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex items-center space-x-2"
                 >
                   <ArrowRight size={18} />
                   <span>Get Started</span>
                 </Link>
                 <Link
                   to="/sign-up"
-                  className="block px-3 py-2 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg text-center mt-2 transition-all duration-300 flex items-center justify-center space-x-2"
+                  className="px-3 py-2 text-base font-medium text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg text-center mt-2 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
                   <UserPlus size={18} />
                   <span>Sign Up</span>
