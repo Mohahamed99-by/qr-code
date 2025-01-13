@@ -9,12 +9,13 @@ const Register = React.lazy(() => import('./components/Register'));
 const LinkQRGenerator = React.lazy(() => import('./pages/LinkQRGenerator'));
 const QRCodeScanner = React.lazy(() => import('./pages/QRCodeScanner'));
 const Examples = React.lazy(() => import('./components/Examples'));
+const LoadingSpinner = React.lazy(() => import('./components/LoadingSpinner'));
 
 const App = () => {
   return (
     <Router>
       <Navbar />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/examples" element={<Examples />} />
