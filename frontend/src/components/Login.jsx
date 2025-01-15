@@ -65,7 +65,7 @@ const Login = () => {
       // Reload the page and then navigate
       window.location.reload();
       // The navigation will happen after the page reload
-      window.location.href = "/qr-code-generate";
+      window.location.href = "/";
     } catch (err) {
       if (err.response) {
         switch (err.response.status) {

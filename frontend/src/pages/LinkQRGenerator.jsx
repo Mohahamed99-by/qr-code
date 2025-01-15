@@ -424,73 +424,6 @@ const LinkQRGenerator = () => {
     }
   };
 
-  const generateExampleQRCodes = async () => {
-    const examples = [
-      {
-        type: 'url',
-        data: { url: 'https://github.com/your-username/QR-code' }
-      },
-      {
-        type: 'email',
-        data: { email: 'example@email.com', subject: 'Hello from QR Code Generator!' }
-      },
-      {
-        type: 'wifi',
-        data: { ssid: 'MyWiFiNetwork', password: 'MySecurePass123', encryption: 'WPA' }
-      },
-      {
-        type: 'phone',
-        data: { phoneNumber: '+1234567890' }
-      },
-      {
-        type: 'whatsapp',
-        data: { phoneNumber: '+1234567890', message: 'Hello from QR Code Generator!' }
-      },
-      {
-        type: 'location',
-        data: { latitude: '34.0209', longitude: '-6.8416', label: 'Rabat, Morocco' }
-      }
-    ];
-
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('Authentication token is missing');
-
-      for (const example of examples) {
-        const formattedData = example.type === 'whatsapp' 
-          ? {
-              ...example.data,
-              whatsappUrl: `https://wa.me/${example.data.phoneNumber.replace(/[^0-9+]/g, '')}?text=${encodeURIComponent(example.data.message)}`
-            }
-          : example.data;
-
-        const response = await fetch(`${apiBaseUrl}/generate-qr`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            type: example.type,
-            data: formattedData,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(await response.text());
-        }
-
-        const data = await response.json();
-        setQrCodes(prev => [data, ...prev]);
-      }
-    } catch (error) {
-      console.error('Error generating example QR codes:', error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
       <SEO 
@@ -519,27 +452,6 @@ const LinkQRGenerator = () => {
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
               <p className="text-sm sm:text-base text-gray-600">Transform your links into QR codes instantly</p>
             </div>
-            {qrCodes.length === 0 && (
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={generateExampleQRCodes}
-                className="mt-4 inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-200 font-medium shadow-lg shadow-purple-200/50"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Generating Examples...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4" />
-                    <span>Generate Example QR Codes</span>
-                  </>
-                )}
-              </motion.button>
-            )}
           </motion.div>
 
           <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
