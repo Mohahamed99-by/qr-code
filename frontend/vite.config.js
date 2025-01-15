@@ -18,7 +18,7 @@ export default defineConfig({
       }
     }
   ],
-  base: process.env.NODE_ENV === 'production' ? '/QR-code/' : '/',
+  base: '/',
   server: {
     port: 3000,
     host: true

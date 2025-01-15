@@ -1,26 +1,25 @@
 {
-  "short_name": "QR Generator",
+  "short_name": "QR Code",
   "name": "QR Code Generator & Scanner",
   "icons": [
     {
-      "src": "qr-code-icon.svg",
+      "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/svg+xml"
+      "type": "image/x-icon"
     },
     {
-      "src": "qr-code-icon-192.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "qr-code-icon-512.png",
+      "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#9333ea",
-  "background_color": "#ffffff",
-  "description": "Create and scan QR codes instantly with our free online tool"
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
 }
