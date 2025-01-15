@@ -1,31 +1,36 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Navbar from './components/NavBar';
+import Register from './components/Register';
+import Login from './components/Login';
+import Examples from './components/Examples';
+import LoadingSpinner from './components/LoadingSpinner';
+import LandingPage from './pages/LandingPage';
 
-// Lazy load components
-const LandingPage = React.lazy(() => import('./pages/LandingPage'));
-const Login = React.lazy(() => import('./components/Login'));
-const Register = React.lazy(() => import('./components/Register'));
-const LinkQRGenerator = React.lazy(() => import('./pages/LinkQRGenerator'));
+// Lazy loaded components
 const QRCodeScanner = React.lazy(() => import('./pages/QRCodeScanner'));
-const Examples = React.lazy(() => import('./components/Examples'));
-const LoadingSpinner = React.lazy(() => import('./components/LoadingSpinner'));
+const LinkQRGenerator = React.lazy(() => import('./pages/LinkQRGenerator'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 const App = () => {
   return (
-    <Router>
-      <Navbar />
-      <Suspense fallback={<LoadingSpinner />}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/examples" element={<Examples />} />
-          <Route path="/get-started" element={<Login />} />
-          <Route path="/sign-up" element={<Register />} />
-          <Route path="/qr-code-generate" element={<LinkQRGenerator />} />
-          <Route path="/qr-code-scanner" element={<QRCodeScanner />} />
-        </Routes>
-      </Suspense>
-    </Router>
+    <HelmetProvider>
+      <Router>
+        <Navbar />
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/examples" element={<Examples />} />
+            <Route path="/get-started" element={<Login />} />
+            <Route path="/sign-up" element={<Register />} />
+            <Route path="/qr-code-generate" element={<LinkQRGenerator />} />
+            <Route path="/qr-code-scanner" element={<QRCodeScanner />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </HelmetProvider>
   );
 };
 

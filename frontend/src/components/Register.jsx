@@ -102,20 +102,20 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-cyan-500 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-pink-500 px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-2xl border border-white/20 transform hover:scale-[1.01] transition-all duration-300">
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl p-6 sm:p-8 shadow-2xl border border-purple-200 transform hover:scale-[1.01] transition-all duration-300">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+            <h2 className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
               Join QRCraft
             </h2>
-            <p className="text-cyan-100">
+            <p className="text-gray-600">
               Create your account to get started
             </p>
           </div>
 
           {error && (
-            <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-200 px-4 py-3 rounded-xl text-center backdrop-blur-sm">
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-center backdrop-blur-sm">
               {error}
             </div>
           )}
@@ -123,35 +123,35 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-cyan-100 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   First Name
                 </label>
                 <div className="relative group">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-300 group-hover:text-cyan-200 transition-colors" size={20} />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 group-hover:text-purple-500 transition-colors" size={20} />
                   <input
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
                     disabled={isLoading}
-                    className="block w-full pl-10 pr-4 py-3 bg-white/5 border border-cyan-300/20 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent backdrop-blur-sm placeholder-cyan-300/50 transition-all hover:bg-white/10"
+                    className="block w-full pl-10 pr-4 py-3 bg-white border border-purple-200 text-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-400 transition-all hover:border-purple-300"
                     placeholder="John"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-cyan-100 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Last Name
                 </label>
                 <div className="relative group">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-300 group-hover:text-cyan-200 transition-colors" size={20} />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 group-hover:text-purple-500 transition-colors" size={20} />
                   <input
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
                     disabled={isLoading}
-                    className="block w-full pl-10 pr-4 py-3 bg-white/5 border border-cyan-300/20 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent backdrop-blur-sm placeholder-cyan-300/50 transition-all hover:bg-white/10"
+                    className="block w-full pl-10 pr-4 py-3 bg-white border border-purple-200 text-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-400 transition-all hover:border-purple-300"
                     placeholder="Doe"
                   />
                 </div>
@@ -159,54 +159,54 @@ const Register = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-cyan-100 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
               <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-300 group-hover:text-cyan-200 transition-colors" size={20} />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 group-hover:text-purple-500 transition-colors" size={20} />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={isLoading}
-                  className="block w-full pl-10 pr-4 py-3 bg-white/5 border border-cyan-300/20 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent backdrop-blur-sm placeholder-cyan-300/50 transition-all hover:bg-white/10"
+                  className="block w-full pl-10 pr-4 py-3 bg-white border border-purple-200 text-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-400 transition-all hover:border-purple-300"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-cyan-100 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-300 group-hover:text-cyan-200 transition-colors" size={20} />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 group-hover:text-purple-500 transition-colors" size={20} />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={isLoading}
-                  className="block w-full pl-10 pr-4 py-3 bg-white/5 border border-cyan-300/20 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent backdrop-blur-sm placeholder-cyan-300/50 transition-all hover:bg-white/10"
+                  className="block w-full pl-10 pr-4 py-3 bg-white border border-purple-200 text-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-400 transition-all hover:border-purple-300"
                   placeholder="********"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-cyan-100 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Confirm Password
               </label>
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-300 group-hover:text-cyan-200 transition-colors" size={20} />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 group-hover:text-purple-500 transition-colors" size={20} />
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   disabled={isLoading}
-                  className="block w-full pl-10 pr-4 py-3 bg-white/5 border border-cyan-300/20 text-white rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent backdrop-blur-sm placeholder-cyan-300/50 transition-all hover:bg-white/10"
+                  className="block w-full pl-10 pr-4 py-3 bg-white border border-purple-200 text-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent placeholder-gray-400 transition-all hover:border-purple-300"
                   placeholder="********"
                 />
               </div>
@@ -215,7 +215,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-medium rounded-xl shadow-lg hover:from-blue-600 hover:to-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-blue-600 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:transform-none"
+              className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-xl shadow-lg hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-pink-600 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:transform-none"
             >
               {isLoading ? (
                 <>
@@ -228,11 +228,11 @@ const Register = () => {
             </button>
 
             <div className="text-center">
-              <p className="text-cyan-100">
+              <p className="text-gray-600">
                 Already have an account?{' '}
                 <a
                   href="/get-started"
-                  className="text-white hover:text-cyan-200 font-medium transition-colors hover:underline"
+                  className="text-purple-600 hover:text-purple-700 font-medium transition-colors hover:underline"
                 >
                   Sign in
                 </a>
@@ -241,7 +241,7 @@ const Register = () => {
           </form>
         </div>
 
-        <p className="mt-6 text-center text-sm text-cyan-100">
+        <p className="mt-6 text-center text-sm text-white/80">
           {new Date().getFullYear()} QRCraft. All rights reserved.
         </p>
       </div>

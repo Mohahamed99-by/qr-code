@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import QrScanner from 'qr-scanner';
 import { QrCode, Upload, Scan, Clipboard, Camera } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const QRCodeScanner = () => {
   const [scannedLink, setScannedLink] = useState(null);
@@ -26,7 +27,17 @@ const QRCodeScanner = () => {
       setScannedLink(result);
     } catch (error) {
       console.error('Error scanning QR code:', error);
-      alert('Could not read QR code. Please try a different image.');
+      toast.error('Could not read QR code. Please try a different image.', {
+        style: {
+          border: '1px solid #FCA5A5',
+          padding: '16px',
+          color: '#DC2626',
+        },
+        iconTheme: {
+          primary: '#DC2626',
+          secondary: '#FEE2E2',
+        },
+      });
     }
   };
 
@@ -36,7 +47,18 @@ const QRCodeScanner = () => {
 
   const copyToClipboard = (link) => {
     navigator.clipboard.writeText(link);
-    alert('Link copied to clipboard!');
+    toast.success('Link copied to clipboard!', {
+      style: {
+        border: '1px solid #E9D5FF',
+        padding: '16px',
+        background: '#FAF5FF',
+        color: '#6B46C1',
+      },
+      iconTheme: {
+        primary: '#9333EA',
+        secondary: '#FAF5FF',
+      },
+    });
   };
 
   const startCameraScan = () => {
@@ -70,7 +92,17 @@ const QRCodeScanner = () => {
         })
         .catch((error) => {
           console.error('Error capturing QR code:', error);
-          alert('Failed to capture QR code. Please try again.');
+          toast.error('Failed to capture QR code. Please try again.', {
+            style: {
+              border: '1px solid #FCA5A5',
+              padding: '16px',
+              color: '#DC2626',
+            },
+            iconTheme: {
+              primary: '#DC2626',
+              secondary: '#FEE2E2',
+            },
+          });
         });
     }
   };
@@ -84,16 +116,17 @@ const QRCodeScanner = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-cyan-500 p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4 sm:p-6 lg:p-8">
+      <Toaster position="top-right" />
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {/* Left Side - Scanner Controls */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 shadow-xl space-y-4 sm:space-y-6 lg:space-y-8 hover:shadow-2xl transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-4 sm:p-6 lg:p-8 border border-purple-200 shadow-xl space-y-4 sm:space-y-6 lg:space-y-8 hover:shadow-2xl hover:shadow-purple-200/50 transition-all duration-300">
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className="p-2 sm:p-3 bg-blue-500/20 rounded-xl border border-blue-400/30">
-                <QrCode className="text-cyan-300 w-6 h-6 sm:w-8 sm:h-8" />
+              <div className="p-2 sm:p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-200">
+                <QrCode className="text-purple-500 w-6 h-6 sm:w-8 sm:h-8" />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">
+              <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
                 QR Scanner
               </h1>
             </div>
@@ -109,7 +142,7 @@ const QRCodeScanner = () => {
               />
               <button 
                 onClick={triggerFileInput}
-                className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium shadow-lg hover:shadow-blue-500/25"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium shadow-lg hover:shadow-purple-500/25"
               >
                 <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="text-sm sm:text-base">Upload QR Code</span>
@@ -121,7 +154,7 @@ const QRCodeScanner = () => {
               {!isScanning ? (
                 <button 
                   onClick={startCameraScan}
-                  className="w-full bg-white/10 backdrop-blur-sm text-cyan-200 border border-white/20 hover:bg-white/20 px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium"
+                  className="w-full bg-white hover:bg-purple-50 text-gray-700 border border-purple-200 px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium"
                 >
                   <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="text-sm sm:text-base">Start Camera Scan</span>
@@ -129,20 +162,20 @@ const QRCodeScanner = () => {
               ) : (
                 <button 
                   onClick={stopCameraScan}
-                  className="w-full bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 hover:bg-cyan-500/30 px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium"
+                  className="w-full bg-purple-100 text-purple-700 border border-purple-200 hover:bg-purple-200 px-4 sm:px-6 py-3 sm:py-4 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium"
                 >
                   <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="text-sm sm:text-base">Stop Camera Scan</span>
                 </button>
               )}
-              <div className="relative rounded-xl overflow-hidden border border-white/20 shadow-lg">
+              <div className="relative rounded-xl overflow-hidden border border-purple-200 shadow-lg">
                 <video 
                   ref={videoRef} 
-                  className="w-full h-48 sm:h-56 lg:h-64 object-cover bg-black/50" 
+                  className="w-full h-48 sm:h-56 lg:h-64 object-cover bg-purple-900/10" 
                 />
                 <button
                   onClick={captureQRCode}
-                  className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-cyan-200 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-300 flex items-center space-x-1.5 sm:space-x-2 border border-white/20"
+                  className="absolute bottom-2 sm:bottom-4 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-sm hover:bg-purple-50 text-gray-700 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-300 flex items-center space-x-1.5 sm:space-x-2 border border-purple-200"
                 >
                   <Scan className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                   <span className="text-sm sm:text-base">Capture QR Code</span>
@@ -152,11 +185,11 @@ const QRCodeScanner = () => {
           </div>
 
           {/* Right Side - Result and Preview */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 sm:p-6 lg:p-8 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl p-4 sm:p-6 lg:p-8 border border-purple-200 shadow-xl hover:shadow-2xl hover:shadow-purple-200/50 transition-all duration-300">
             {(previewImage || scannedLink) ? (
               <div className="space-y-4 sm:space-y-6">
                 {previewImage && (
-                  <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/10 shadow-lg">
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 sm:p-4 border border-purple-200 shadow-lg">
                     <img 
                       src={previewImage} 
                       alt="QR Code Preview" 
@@ -167,16 +200,16 @@ const QRCodeScanner = () => {
 
                 {scannedLink && (
                   <div className="space-y-3 sm:space-y-4">
-                    <div className="bg-blue-500/10 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-blue-400/30">
-                      <h2 className="text-xs sm:text-sm font-medium mb-2 flex items-center text-cyan-200">
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 sm:p-6 rounded-xl border border-purple-200">
+                      <h2 className="text-xs sm:text-sm font-medium mb-2 flex items-center text-purple-700">
                         <Scan className="mr-2 w-3 h-3 sm:w-4 sm:h-4" />
                         Scanned Link
                       </h2>
-                      <p className="text-white/90 break-all font-mono text-xs sm:text-sm">{scannedLink}</p>
+                      <p className="text-gray-700 break-all font-mono text-xs sm:text-sm">{scannedLink}</p>
                     </div>
                     <button
                       onClick={() => copyToClipboard(scannedLink)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium shadow-lg hover:shadow-blue-500/25"
+                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-300 flex items-center justify-center space-x-2 font-medium shadow-lg hover:shadow-purple-500/25"
                     >
                       <Clipboard className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                       <span className="text-sm sm:text-base">Copy Link</span>
@@ -186,14 +219,14 @@ const QRCodeScanner = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-full space-y-4 sm:space-y-6 text-center">
-                <div className="p-4 sm:p-6 bg-blue-500/20 rounded-full border border-blue-400/30">
-                  <QrCode className="text-cyan-300 w-8 h-8 sm:w-12 sm:h-12" />
+                <div className="p-4 sm:p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full border border-purple-200">
+                  <QrCode className="text-purple-500 w-8 h-8 sm:w-12 sm:h-12" />
                 </div>
                 <div className="space-y-1 sm:space-y-2">
-                  <p className="text-white font-medium text-base sm:text-lg">
+                  <p className="text-gray-700 font-medium text-base sm:text-lg">
                     No QR Code Detected
                   </p>
-                  <p className="text-cyan-200 text-xs sm:text-sm">
+                  <p className="text-purple-600 text-xs sm:text-sm">
                     Upload a QR code image or use your camera to scan
                   </p>
                 </div>
