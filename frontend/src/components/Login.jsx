@@ -62,10 +62,8 @@ const Login = () => {
       setError("");
       setPassword('');
       
-      // Reload the page and then navigate
-      window.location.reload();
-      // The navigation will happen after the page reload
-      window.location.href = "/";
+      // Navigate to QR code generator page
+      window.location.href = "/qr-code-generate";
     } catch (err) {
       if (err.response) {
         switch (err.response.status) {
