@@ -5,6 +5,7 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/QR-code/',  // Replace with your repository name
   server: {
     port: 3000,
     host: true, // Listen on all network interfaces
