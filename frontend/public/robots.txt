@@ -8,15 +8,6 @@ Sitemap: https://qr-code-vs.onrender.com/sitemap.xml
 # Crawl-delay
 Crawl-delay: 10
 
-# Additional rules
-Allow: /*.js
-Allow: /*.css
-Allow: /*.png
-Allow: /*.jpg
-Allow: /*.gif
-Allow: /*.svg
-Allow: /*.ico
-
 # Disallow certain paths
 Disallow: /api/
 Disallow: /admin/
