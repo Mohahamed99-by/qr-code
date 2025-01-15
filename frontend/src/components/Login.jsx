@@ -62,8 +62,8 @@ const Login = () => {
       setError("");
       setPassword('');
       
-      // Navigate to QR code generator page
-      window.location.href = "/qr-code-generate";
+      // Use navigate for clean routing
+      navigate('/qr-code-generate', { replace: true });
     } catch (err) {
       if (err.response) {
         switch (err.response.status) {

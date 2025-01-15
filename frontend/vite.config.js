@@ -21,12 +21,18 @@ export default defineConfig({
   base: '/',
   server: {
     port: 3000,
-    host: true
+    host: true,
+    historyApiFallback: true
   },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
   }
 })
